@@ -57,10 +57,11 @@ void TeaDB::table::insert(string line) {
             if (line[i] == ',' || i == lineLastIndex) {
                 if (!stringT) {
                     token = trim(token);
+                    value = trim(value);
                     // 写入链接表
                     if (isString) {
-                        value.erase(value.begin());
-                        value.erase(value.end() - 1);
+//                        value.erase(value.begin());
+//                        value.erase(value.end() - 1);
                         long long n = 0;
                         while (true) {
                             fstream file(path + dbName + "/" + name + "/string-" + token + "-" + lltoString(n));
@@ -72,8 +73,9 @@ void TeaDB::table::insert(string line) {
                                 break;
                             }
                             string content("");
-                            file >> content;
-                            if (content < value) n = 2 * n + 1;
+//                            file >> content;
+                            getline(file, content);
+                            if (content <= value) n = 2 * n + 1;
                             if (content > value) n = 2 * n + 2;
                             file.close();
                         }

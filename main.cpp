@@ -10,7 +10,8 @@ int main() {
     db.insert("test", true);
     auto table = db.tab("test");
 ////    std::cout << table << std::endl;
-    table->insert("name: \"TeaDB\", language: \"c++\", level: 5");
+//    table->insert("name: \"TeaDB\", language: \"c++\", level: 5");
+    table->insert("name: \"Mysql\", language: \"c\", level: 6");
 //    table->insert("best_number: 5");
     return 0;
 }
