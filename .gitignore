@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+.idea
+cmake-build-*
+CMakeFiles
+cmake_install.cmake
+CMakeCache.txt
+Makefile
+TeaDB
+*.cbp

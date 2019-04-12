@@ -1,0 +1,18 @@
+Start testing: Apr 11 21:46 CST
+----------------------------------------------------------
+1/1 Testing: SimpleTest
+1/1 Test: SimpleTest
+Command: "/Users/zhengyuanhao/Documents/TeaDB/base64-master/build/tests/simple_test"
+Directory: /Users/zhengyuanhao/Documents/TeaDB/base64-master/build/tests
+"SimpleTest" start time: Apr 11 21:46 CST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.69 sec
+----------------------------------------------------------
+Test Passed.
+"SimpleTest" end time: Apr 11 21:46 CST
+"SimpleTest" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Apr 11 21:46 CST
