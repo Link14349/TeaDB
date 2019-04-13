@@ -63,14 +63,19 @@ void TeaDB::table::insert(string line) {
                     if (token != "_id") {
                         // 写入链接表
                         if (isString) {
-//                        value.erase(value.begin());
-//                        value.erase(value.end() - 1);
+                            value.erase(0, 1);
+                            value.erase(value.end() - 1);
+                            string tmp("");
+                            Base64::Encode(value, &tmp);
+                            value = tmp;
                             long long n = 0;
                             while (true) {
                                 fstream file(path + dbName + "/" + name + "/string-" + token + "-" + lltoString(n));
                                 if (!file) {
                                     file.close();
-                                    fstream writer(path + dbName + "/" + name + "/string-" + token + "-" + lltoString(n), std::ios::out);
+                                    fstream writer(
+                                            path + dbName + "/" + name + "/string-" + token + "-" + lltoString(n),
+                                            std::ios::out);
                                     writer << value << endl << maxId;
                                     writer.close();
                                     break;
@@ -125,8 +130,46 @@ void TeaDB::table::insert(string line) {
 TeaDB::table::fields TeaDB::table::find(string token, string v, long long limit) {
     bool isString = false;
     fields result;
+    if (token == "_id") {
+        long long id = atoll(v.c_str());
+        fstream idTable(path + dbName + "/" + name + "/_id-" + lltoString(id / TABLE_SIZE));
+//                _field res;
+        string tableLine;
+        string _idValue;
+        while (getline(idTable, tableLine)) {
+            _idValue = "";
+            int i = 0;
+            for (; i < tableLine.length() && tableLine[i] != ':'; i++) {}
+            i++;
+            for (; i < tableLine.length() && tableLine[i] != ','; i++) {
+                _idValue += tableLine[i];
+            }
+            _idValue = trim(_idValue);
+            if (v == _idValue) {// 找到结果
+                if (result.size() >= limit) break;// 个数达成
+                result.push_back(tableLine);
+            }
+        }
+        idTable.close();
+        return result;
+    }
     if (v[0] == '\"') isString = true;
     if (isString) {
+        long long s = 0;
+        while (true) {
+            fstream file(path + dbName + "/" + name + "/string-" + token + "-" + lltoString(s));
+            if (!file) {
+                break;
+            }
+            string content("");
+            getline(file, content);
+
+            if (content == v) {
+            }
+            if (content < v) s = 2 * s + 1;
+            if (content > v) s = 2 * s + 2;
+            file.close();
+        }
     } else {
         long long tmp = ((double)(FLOAT_ACC) * atof(v.c_str()));
         long long tableId = tmp / TABLE_SIZE;
@@ -151,6 +194,7 @@ TeaDB::table::fields TeaDB::table::find(string token, string v, long long limit)
                     for (; i < tableLine.length() && tableLine[i] != ','; i++) {
                         _idValue += tableLine[i];
                     }
+                    _idValue = trim(_idValue);
                     if (lltoString(id) == _idValue) {// 找到结果
                         if (result.size() >= limit) break;// 个数达成
 //                        std::cout << id << ", " << _idValue << ", " << (lltoString(id) == _idValue) << std::endl;
