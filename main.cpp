@@ -15,13 +15,19 @@ int64_t getCurrentTime()
 int main() {
     time_t start = getCurrentTime();
     TeaDB::db db("test");
-    db.create();
+//    db.create();
     db.insert("test", true);
 
     auto table = db.tab("test");
-//
-    table->insert("name: \"TeaDB\", language: \"c++\", level: 5");
-    table->insert("name: \"test\", language: \"test\", level: 5.5");
+//    auto res = table->find("name", "\"TeaDB\"", 1);
+//    for (auto iter = res.begin(); iter != res.end(); iter++) {
+////        std::cout << *iter << std::endl;
+//    }
+
+    for (int i = 0; i < 10; i++) {
+        table->insert("name: \"TeaDB\", language: \"c++\", level: 5");
+    }
+//    table->insert("name: \"test\", language: \"test\", level: 5.5");
 //    table->insert("best_number: 5");
     time_t end = getCurrentTime();
     std::cout << "start: " << start << "ms, end: " << end << "ms, used " << (end - start) << "ms" << std::endl;

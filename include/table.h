@@ -48,7 +48,9 @@ namespace TeaDB {
             }
 
             s.erase(0,s.find_first_not_of(" "));
+            s.erase(0,s.find_first_not_of("\n"));
             s.erase(s.find_last_not_of(" ") + 1);
+            s.erase(s.find_last_not_of("\n") + 1);
             return s;
         }
     };
