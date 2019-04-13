@@ -14,7 +14,7 @@ namespace TeaDB {
     class db {
     public:
         db(string n, string p = "/usr/local/TeaDB/") : name(n), path(p) { }
-        inline void create();
+        void create();
         void insert(string, bool);
         inline table* tab(string name) {
             auto iter = tables.find(name);

@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <strstream>
+#include <sstream>
 #include "../include/table.h"
 #include "../base64-master/base64.h"
 using std::fstream;
@@ -58,33 +60,36 @@ void TeaDB::table::insert(string line) {
                 if (!stringT) {
                     token = trim(token);
                     value = trim(value);
-                    // 写入链接表
-                    if (isString) {
+                    if (token != "_id") {
+                        // 写入链接表
+                        if (isString) {
 //                        value.erase(value.begin());
 //                        value.erase(value.end() - 1);
-                        long long n = 0;
-                        while (true) {
-                            fstream file(path + dbName + "/" + name + "/string-" + token + "-" + lltoString(n));
-                            if (!file) {
-                                file.close();
-                                fstream writer(path + dbName + "/" + name + "/string-" + token + "-" + lltoString(n), std::ios::out);
-                                writer << value << endl << maxId;
-                                writer.close();
-                                break;
-                            }
-                            string content("");
+                            long long n = 0;
+                            while (true) {
+                                fstream file(path + dbName + "/" + name + "/string-" + token + "-" + lltoString(n));
+                                if (!file) {
+                                    file.close();
+                                    fstream writer(path + dbName + "/" + name + "/string-" + token + "-" + lltoString(n), std::ios::out);
+                                    writer << value << endl << maxId;
+                                    writer.close();
+                                    break;
+                                }
+                                string content("");
 //                            file >> content;
-                            getline(file, content);
-                            if (content <= value) n = 2 * n + 1;
-                            if (content > value) n = 2 * n + 2;
-                            file.close();
+                                getline(file, content);
+                                if (content <= value) n = 2 * n + 1;
+                                if (content > value) n = 2 * n + 2;
+                                file.close();
+                            }
+                        } else {
+                            long long v = (long long) ((double)(FLOAT_ACC) * atof(value.c_str()));
+//                            std::cout << v << ", " << atof(value.c_str()) << std::endl;
+                            long long fileId = v / TABLE_SIZE;
+                            fstream fileSaver(path + dbName + "/" + name + "/" + token + "-" + lltoString(fileId), std::ios::app);
+                            fileSaver << lltoString(v) << " " << maxIdString << endl;
+                            fileSaver.close();
                         }
-                    } else {
-                        long long v = (long long) ((double)(FLOAT_ACC) * atof(value.c_str()));
-                        long long fileId = v / TABLE_SIZE;
-                        fstream fileSaver(path + dbName + "/" + name + "/" + token + "-" + lltoString(fileId), std::ios::app);
-                        fileSaver << token << ":" << lltoString(v) << ",_id:" << maxIdString << endl;
-                        fileSaver.close();
                     }
 
                     // 重置
@@ -115,4 +120,49 @@ void TeaDB::table::insert(string line) {
     fstream _idFileOut(path + dbName + "/" + name + "/_id.txt", std::ios::in | std::ios::out | std::ios::trunc);
     _idFileOut.write(maxIdString.c_str(), maxIdString.length());
     _idFileOut.close();
+}
+
+TeaDB::table::fields TeaDB::table::find(string token, string v, long long limit) {
+    bool isString = false;
+    fields result;
+    if (v[0] == '\"') isString = true;
+    if (isString) {
+    } else {
+        long long tmp = ((double)(FLOAT_ACC) * atof(v.c_str()));
+        long long tableId = tmp / TABLE_SIZE;
+        fstream tableFile(path + dbName + "/" + name + "/" + token + "-" + lltoString(tableId));
+        string line;
+        while (getline(tableFile, line)) {
+            std::strstream ss;
+//            std::cout << line << std::endl;
+            ss << line;
+            long long value, id;
+            ss >> value >> id;
+            if (value == tmp) {
+                fstream idTable(path + dbName + "/" + name + "/_id-" + lltoString(id / TABLE_SIZE));
+//                _field res;
+                string tableLine;
+                string _idValue;
+                while (getline(idTable, tableLine)) {
+                    _idValue = "";
+                    int i = 0;
+                    for (; i < tableLine.length() && tableLine[i] != ':'; i++) {}
+                    i++;
+                    for (; i < tableLine.length() && tableLine[i] != ','; i++) {
+                        _idValue += tableLine[i];
+                    }
+                    if (lltoString(id) == _idValue) {// 找到结果
+                        if (result.size() >= limit) break;// 个数达成
+//                        std::cout << id << ", " << _idValue << ", " << (lltoString(id) == _idValue) << std::endl;
+                        result.push_back(tableLine);
+//                        std::cout << tableLine << std::endl;
+                    }
+//                    std::cout << _idValue << ", " << id << std::endl;
+                }
+                idTable.close();
+            }
+        }
+        tableFile.close();
+    }
+    return result;
 }

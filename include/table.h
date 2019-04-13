@@ -5,14 +5,18 @@
 #include <cstring>
 #include <strstream>
 #include <sstream>
+#include <list>
 using std::string;
+using std::list;
 
 namespace TeaDB {
     class table {
     public:
+        typedef list<string> fields;
         table(string n, string d, string p = "/usr/local/TeaDB/") : name(n), dbName(d), path(p) { }
         void create();
         void insert(string);
+        fields find(string, string, long long);
         inline string nameOf() {
             return name;
         }

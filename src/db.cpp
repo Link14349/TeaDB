@@ -6,7 +6,7 @@ void TeaDB::db::insert(string tableName, bool create = true) {
     if (create) table->create();
 }
 
-inline void TeaDB::db::create() {
+void TeaDB::db::create() {
     string command("mkdir " + path + name);
     system(command.c_str());
 }
