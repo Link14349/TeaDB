@@ -7,6 +7,7 @@
 #include <map>
 #include "table.h"
 #include "reader.h"
+#include "high_precision.h"
 using std::string;
 using std::map;
 
