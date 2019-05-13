@@ -16,7 +16,7 @@ namespace TeaDB {
         table(string n, string d, string p = "/usr/local/TeaDB/") : name(n), dbName(d), path(p) { }
         void create();
         void insert(string);
-        fields find(string, string, long long);
+        fields find(string, string, unsigned long long limit = 9223372036854775807);
         inline string nameOf() {
             return name;
         }
@@ -32,7 +32,7 @@ namespace TeaDB {
         string name;
         string dbName;
         string path;
-        string lltoString(long long t)
+        string lltoString(unsigned long long t)
         {
             std::string result;
             std::strstream ss;

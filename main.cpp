@@ -16,17 +16,19 @@ int main() {
     time_t start = getCurrentTime();
     TeaDB::db db("test");
 //    db.create();
-    db.insert("test", true);
+    db.insert("test", false);
 
     auto table = db.tab("test");
-//    auto res = table->find("name", "\"TeaDB\"", 1);
-//    for (auto iter = res.begin(); iter != res.end(); iter++) {
-////        std::cout << *iter << std::endl;
-//    }
-
-    for (int i = 0; i < 10; i++) {
-        table->insert("name: \"TeaDB\", language: \"c++\", level: 5");
+    for (int i = 0; i < 1; i++) {
+        auto res = table->find("name", "\"TeaDB\"");
+        for (auto iter = res.begin(); iter != res.end(); iter++) {
+            std::cout << *iter << std::endl;
+        }
     }
+
+//    for (int i = 0; i < 1000; i++) {
+//        table->insert("name: \"TeaDB\", language: \"c++\"");
+//    }
 //    table->insert("name: \"test\", language: \"test\", level: 5.5");
 //    table->insert("best_number: 5");
     time_t end = getCurrentTime();
