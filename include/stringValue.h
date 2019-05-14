@@ -1,8 +1,10 @@
 #ifndef TEADB_STRINGVALUE_H
 #define TEADB_STRINGVALUE_H
 
+#include "high_precision.h"
+
 namespace TeaDB {
-    long long stringValue();
+    high_precision stringValue(string);
 }
 
 

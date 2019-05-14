@@ -29,9 +29,9 @@ int main() {
 //        }
 //    }
 
-    high_precision a("12321312890");
-    high_precision b("-123213");
-    std::cout << (a + b).valueOf() << std::endl;
+    for (int i = 0; i < 100; i++) {
+        TeaDB::stringValue("adsfjsdalfkjdsalkfhsdakjhfkjsadfsad/-12312321312==").valueOf();
+    }
     time_t end = getCurrentTime();
     std::cout << "start: " << start << "ms, end: " << end << "ms, used " << (end - start) << "ms" << std::endl;
     return 0;
